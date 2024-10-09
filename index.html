@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warzywniak Online - Strona Główna</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* HEADER STYLES */
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 0 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .header a:hover {
+            background-color: #45a049;
+        }
+
+        /* CONTAINER AND PRODUCT STYLES */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product {
+            flex: 1 1 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fdfdfd;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .product img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .product-info {
+            text-align: center;
+            flex: 1;
+        }
+        .product-info h2 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .product-info p {
+            margin: 0 0 15px;
+            color: #555;
+        }
+        .product button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .product button:hover {
+            background-color: #45a049;
+        }
+
+        /* CART ICON STYLES */
+        .cart-icon {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+        }
+
+        /* CART POPUP STYLES */
+        .cart-popup {
+            display: none;
+            position: fixed;
+            top: 80px;
+            right: 15px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 320px;
+            z-index: 1000;
+        }
+        .cart-popup.show {
+            display: block;
+        }
+        .cart-popup h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            color: #333;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .cart-item .item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-item input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .cart-item button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .cart-item button:hover {
+            background-color: #45a049;
+        }
+
+        .cart-item button.remove {
+            background-color: #f44336;
+            padding: 3px 7px;
+        }
+        .cart-item button.remove:hover {
+            background-color: #d32f2f;
+        }
+
+        /* TOTAL PRICE AND CHECKOUT BUTTON STYLES */
+        .total-price {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.1em;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            color: #333;
+        }
+        #checkout-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        #checkout-button:hover {
+            background-color: #45a049;
+        }
+        #checkout-button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        /* ADJUSTING BUTTON POSITION FOR QUANTITY */
+        .item-details div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 120px;
+        }
+        .item-details button {
+            width: 30px;
+            padding: 5px;
+        }
+        .item-details input {
+            width: 40px;
+            text-align: center;
+            padding: 5px;
+            margin: 0 5px;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .product {
+                width: 100%;
+                max-width: 300px;
+            }
+            .cart-popup {
+                width: 90%;
+                right: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html">Strona Główna</a>
+        <a href="contact.html">Kontakt</a>
+        <a href="about.html">O nas</a>
+        <span class="cart-icon" onclick="toggleCart()">🛒</span>
+        <div class="cart-popup" id="cart-popup">
+            <h3>Twój Koszyk</h3>
+            <div id="cart-items"></div>
+            <div class="total-price" id="total-price"></div>
+            <button id="checkout-button" onclick="window.location.href='payment.html'">Przejdź do płatności</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Lista warzyw -->
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Red_tomato.jpg" alt="Pomidor">
+            <div class="product-info">
+                <h2>Pomidor</h2>
+                <p>Cena: 0.50 zł/100g | 5.00 zł/kg</p>
+                <button onclick="addToCart('Pomidor', 0.50, 5.00)">Dodaj do koszyka</button>
+                
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Pomidory są idealne do sałatek, sosów, zup, a także jako składnik kanapek.</p>
+                    <p><strong>Hodowla:</strong> Hodujemy pomidory w szklarni, zapewniając optymalne nasłonecznienie i regularne podlewanie. Stosujemy naturalne nawozy, aby zapewnić ich najlepszą jakość.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Carrot.jpg" alt="Marchew">
+            <div class="product-info">
+                <h2>Marchew</h2>
+                <p>Cena: 0.30 zł/100g | 3.00 zł/kg</p>
+                <button onclick="addToCart('Marchew', 0.30, 3.00)">Dodaj do koszyka</button>
+
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Marchew można dodawać do zup, sałatek, soków oraz jako zdrową przekąskę.</p>
+                    <p><strong>Hodowla:</strong> Marchew uprawiana w glebie organicznej z regularnym podlewaniem, aby zachować jej słodycz i świeżość.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Potato.jpg" alt="Ziemniak">
+            <div class="product-info">
+                <h2>Ziemniak</h2>
+                <p>Cena: 0.20 zł/100g | 2.00 zł/kg</p>
+                <button onclick="addToCart('Ziemniak', 0.20, 2.00)">Dodaj do koszyka</button>
+
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Ziemniaki są podstawą wielu potraw, idealne na puree, pieczone, smażone oraz gotowane.</p>
+                    <p><strong>Hodowla:</strong> Uprawiane na polach zrównoważonej uprawy, zapewniamy bogate w składniki odżywcze ziemniaki z naturalnym nawożeniem.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Cucumber_with_leaf_and_flower.jpg" alt="Ogórek">
+            <div class="product-info">
+                <h2>Ogórek</h2>
+                <p>Cena: 0.40 zł/100g | 4.00 zł/kg</p>
+                <button onclick="addToCart('Ogórek', 0.40, 4.00)">Dodaj do koszyka</button>
+
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Ogórki świetnie sprawdzają się w sałatkach, na kanapkach oraz jako przekąska.</p>
+                    <p><strong>Hodowla:</strong> Hodowane w szklarni, gdzie kontrolujemy temperaturę i wilgotność, aby uzyskać chrupiące i świeże ogórki.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Broccoli_Rabe.png" alt="Brokuł">
+            <div class="product-info">
+                <h2>Brokuł</h2>
+                <p>Cena: 0.60 zł/100g | 6.00 zł/kg</p>
+                <button onclick="addToCart('Brokuł', 0.60, 6.00)">Dodaj do koszyka</button>
+
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Brokuły doskonałe do gotowania na parze, zapiekanek i jako składnik sałatek.</p>
+                    <p><strong>Hodowla:</strong> Uprawiane w klimacie umiarkowanym, brokuły rosną na żyznej glebie z regularnym nawożeniem organicznym.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="product">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Lettuce_Mini_Romaine.jpg" alt="Sałata">
+            <div class="product-info">
+                <h2>Sałata</h2>
+                <p>Cena: 0.25 zł/100g | 2.50 zł/kg</p>
+                <button onclick="addToCart('Sałata', 0.25, 2.50)">Dodaj do koszyka</button>
+
+                <!-- Dodajemy pole opisowe -->
+                <details>
+                    <summary>Opis i hodowla</summary>
+                    <p><strong>Zastosowanie:</strong> Sałata to idealna baza do sałatek, dodatek do kanapek i dekoracji potraw.</p>
+                    <p><strong>Hodowla:</strong> Uprawiana bez pestycydów, zbierana świeżo każdego dnia dla najlepszej chrupkości i smaku.</p>
+                </details>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Obsługa koszyka
+        let cart = [];
+
+        function addToCart(productName, pricePer100g, pricePerKg) {
+            const itemIndex = cart.findIndex(item => item.name === productName);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += 100;
+            } else {
+                cart.push({ name: productName, pricePer100g, pricePerKg, quantity: 100 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <img src="https://via.placeholder.com/50" alt="${item.name}">
+                    <div class="item-details">
+                        <span>${item.name}</span>
+                        <div>
+                            <button onclick="updateQuantity('${item.name}', -100)">-</button>
+                            <input type="text" value="${item.quantity / 100}" readonly> kg
+                            <button onclick="updateQuantity('${item.name}', 100)">+</button>
+                        </div>
+                        <button class="remove" onclick="removeFromCart('${item.name}')">Usuń</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+
+                total += (item.pricePerKg * item.quantity) / 1000;
+            });
+
+            document.getElementById('total-price').innerText = `Razem: ${total.toFixed(2)} zł`;
+            document.getElementById('checkout-button').disabled = cart.length === 0;
+        }
+
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            updateCart();
+        }
+
+        function updateQuantity(productName, amount) {
+            const itemIndex = cart.findIndex(item => item.name === productName);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += amount;
+                if (cart[itemIndex].quantity <= 0) {
+                    removeFromCart(productName);
+                }
+            }
+            updateCart();
+        }
+
+        function toggleCart() {
+            const cartPopup = document.getElementById('cart-popup');
+            cartPopup.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
